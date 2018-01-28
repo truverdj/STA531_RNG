@@ -47,9 +47,9 @@ Let $X_1. X_2$ be independent standard normal random variables.
 (a) Finding the distribution of $R = \sqrt{X_1^2 + X_2^2}$ and $\theta = \tan^{-1}X_1/X_2$.  
 
 We will use the method of transformations. 
-$X_1 = r\cos\theta\tan\theta = r\sin\theta$.
-$X_2 = r\sin\theta/\tan\theta = r\cos\theta$.
-$f(x_1, x_2) = (1/2\pi)\exp(-(x_1 + x_2)/2) $.
+$$X_1 = r\cos\theta\tan\theta = r\sin\theta$$
+$$X_2 = r\sin\theta/\tan\theta = r\cos\theta$$
+$$f(x_1, x_2) = (1/2\pi)\exp(-(x_1 + x_2)/2) $$
 
 Then, we get
 $$
@@ -115,11 +115,15 @@ ggplot(data = data.frame(normal_clt, normal_box)) +
   geom_density(aes(normal_clt, color = "CLT")) + 
   geom_density(aes(normal_box, color = "BoxMuller")) +
   ggtitle("The pretty much indistiguishable normal simulations")
+```
+
+```{r timingRes, echo=FALSE}
 timing = data.frame(user = c(clt.time[[1]], box.time[[1]]),
                     system = c(clt.time[[2]], box.time[[2]]),
                     elapse = c(clt.time[[3]], box.time[[3]])
                     )
 rownames(timing) = c("CLT", "BoxMuller")
+
 knitr::kable(timing, 
              caption = paste0("Comparison of Run time for CLT and Box-Muller methods, N =",Nsim)
              )
@@ -165,9 +169,15 @@ $$
 ```{r betaRV}
 alpha = 2
 beta = 2
-g_1 = rgamma(1000, alpha, 1)
-g_2 = rgamma(1000, beta, 1)
+g_1 = rgamma(10000, alpha, 1)
+g_2 = rgamma(10000, beta, 1)
 B = g_1/(g_1 + g_2)
-density(B)
+x = seq(0,1, length.out = 10000)
+B_true = dbeta(x,alpha,beta)
+ggplot(data = data.frame(B, B_true, x)) +
+  geom_density(aes(B, color = "Via Gamma")) +
+  geom_line(aes(x, B_true, color = "True Beta")) +
+  ggtitle("True Beta and Simulated Beta",
+          subtitle = "Seems pretty good")
 ```
 
